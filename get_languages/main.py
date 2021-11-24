@@ -1,4 +1,5 @@
 from google.cloud import firestore
+from urllib import parse
 from flask import jsonify
 
 
@@ -12,9 +13,17 @@ def cross_origin(allowed_methods="*", allowed_origins="*", allowed_headers="*"):
 
     def decorator(handler):
         def wrapped(request):
+            def get_allowed_origins_value(value):
+                if allowed_origins == "*":
+                    return allowed_origins
+                url = parse.urlparse(value)
+                if url.hostname in allowed_origins:
+                    return url.hostname
+                return ""
+
             if request.method == 'OPTIONS':
                 headers = {
-                    'Access-Control-Allow-Origin': get_header_attr_value(allowed_origins),
+                    'Access-Control-Allow-Origin': get_allowed_origins_value(allowed_origins),
                     'Access-Control-Allow-Methods': get_header_attr_value(allowed_methods),
                     'Access-Control-Allow-Headers': get_header_attr_value(allowed_headers),
                 }
