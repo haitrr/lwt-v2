@@ -1,6 +1,8 @@
 from google.cloud import firestore
 from urllib import parse
-from flask import jsonify
+from flask import jsonify, Response
+
+ALLOW_ORIGIN = 'Access-Control-Allow-Origin'
 
 
 def cross_origin(allowed_methods="*", allowed_origins="*", allowed_headers="*"):
@@ -26,16 +28,26 @@ def cross_origin(allowed_methods="*", allowed_origins="*", allowed_headers="*"):
                         return origin
                 return ""
 
+            allowed_origin = get_allowed_origins_value()
             if request.method == 'OPTIONS':
                 headers = {
-                    'Access-Control-Allow-Origin': get_allowed_origins_value(),
+                    ALLOW_ORIGIN: allowed_origin,
                     'Access-Control-Allow-Methods': get_header_attr_value(allowed_methods),
                     'Access-Control-Allow-Headers': get_header_attr_value(allowed_headers),
                 }
                 return '', 204, headers
-            rp, code, headers = handler(request)
-            headers['Access-Control-Allow-Origin'] = get_allowed_origins_value()
-            return rp, code, headers
+            response = handler(request)
+            if type(response) is Response:
+                response.headers[ALLOW_ORIGIN] = allowed_origin
+                return response
+
+            if type(response) is tuple:
+                headers = response[2]
+                headers[ALLOW_ORIGIN] = allowed_origin
+                return response[0], response[1], headers
+
+            headers = {ALLOW_ORIGIN: allowed_origin}
+            return response, 200, headers
 
         return wrapped
 
