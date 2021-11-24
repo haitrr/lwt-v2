@@ -36,4 +36,4 @@ jobs:
             name: get_languages
             runtime: python39
             region: asia-southeast1
-            source_dir: ./
+            source_dir: get_languages
