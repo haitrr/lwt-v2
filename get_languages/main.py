@@ -18,7 +18,8 @@ def cross_origin(allowed_methods="*", allowed_origins="*", allowed_headers="*"):
                     return allowed_origins
                 if 'origin' in request.headers:
                     url = parse.urlparse(request.headers['origin'])
-                    if url.hostname in allowed_origins:
+                    url = url._replace(netloc=url.hostname)
+                    if url.geturl() in allowed_origins:
                         return url.hostname
                 return ""
 
