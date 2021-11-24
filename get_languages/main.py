@@ -16,6 +16,8 @@ def cross_origin(allowed_methods="*", allowed_origins="*", allowed_headers="*"):
             def get_allowed_origins_value():
                 if allowed_origins == "*":
                     return allowed_origins
+                if "origin" not in request.headers:
+                    return ""
                 origin = request.headers['origin']
                 if origin:
                     url = parse.urlparse(origin)
@@ -31,7 +33,9 @@ def cross_origin(allowed_methods="*", allowed_origins="*", allowed_headers="*"):
                     'Access-Control-Allow-Headers': get_header_attr_value(allowed_headers),
                 }
                 return '', 204, headers
-            return handler(request)
+            rp, code, headers = handler(request)
+            headers['Access-Control-Allow-Origin'] = get_allowed_origins_value()
+            return rp, code, headers
 
         return wrapped
 
