@@ -16,9 +16,10 @@ def cross_origin(allowed_methods="*", allowed_origins="*", allowed_headers="*"):
             def get_allowed_origins_value(value):
                 if allowed_origins == "*":
                     return allowed_origins
-                url = parse.urlparse(value)
-                if url.hostname in allowed_origins:
-                    return url.hostname
+                if 'origin' in request.headers:
+                    url = parse.urlparse(request.headers['origin'])
+                    if url.hostname in allowed_origins:
+                        return url.hostname
                 return ""
 
             if request.method == 'OPTIONS':
