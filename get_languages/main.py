@@ -13,19 +13,20 @@ def cross_origin(allowed_methods="*", allowed_origins="*", allowed_headers="*"):
 
     def decorator(handler):
         def wrapped(request):
-            def get_allowed_origins_value(value):
+            def get_allowed_origins_value():
                 if allowed_origins == "*":
                     return allowed_origins
-                if 'origin' in request.headers:
-                    url = parse.urlparse(request.headers['origin'])
+                origin = request.headers['origin']
+                if origin:
+                    url = parse.urlparse(origin)
                     url = url._replace(netloc=url.hostname)
                     if url.geturl() in allowed_origins:
-                        return url.hostname
+                        return origin
                 return ""
 
             if request.method == 'OPTIONS':
                 headers = {
-                    'Access-Control-Allow-Origin': get_allowed_origins_value(allowed_origins),
+                    'Access-Control-Allow-Origin': get_allowed_origins_value(),
                     'Access-Control-Allow-Methods': get_header_attr_value(allowed_methods),
                     'Access-Control-Allow-Headers': get_header_attr_value(allowed_headers),
                 }
