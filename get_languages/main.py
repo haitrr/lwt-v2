@@ -7,5 +7,5 @@ def get_languages(request):
     languages_ref = db.collection(u'languages')
     rs = []
     for doc in languages_ref.stream():
-        rs.append(doc)
+        rs.append(doc.to_dict())
     return json.dumps(rs)
