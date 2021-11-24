@@ -13,4 +13,4 @@ def get_languages(request):
     elif request_json and 'message' in request_json:
         return request_json['message']
     else:
-        return f'Hello World! Deploy!'
+        return f'Hello World! Deploy 1!'
