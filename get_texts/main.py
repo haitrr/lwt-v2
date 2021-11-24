@@ -59,7 +59,7 @@ def cross_origin(allowed_methods="*", allowed_origins="*", allowed_headers="*"):
 @cross_origin(allowed_methods=['GET'], allowed_origins=["http://localhost", "https://lwt-web.azurewebsites.net/"])
 def get_texts(request):
     json_creds = os.getenv("LWT_TEXTS_GCP_PROJECT_CREDENTIALS")
-    json_creds = json_creds.replace(";", ",")
+    json_creds = json_creds.replace(";", ",").replace("!", '=')
     json_creds = json.loads(json_creds)
     db = firestore.Client().from_service_account_info(json_creds)
     texts_ref = db.collection(u'texts')
