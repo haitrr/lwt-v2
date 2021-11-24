@@ -34,7 +34,7 @@ jobs:
         uses: google-github-actions/deploy-cloud-functions@v0.1.2
         with:
             name: get_languages
-            runtime: python3.9
+            runtime: python39
             region: asia-southeast1
             source_dir: /
 
