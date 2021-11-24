@@ -39,4 +39,4 @@ jobs:
             runtime: python39
             region: asia-southeast1
             source_dir: get_texts
-            env_vars: LWT_TEXTS_GCP_PROJECT_CREDENTIALS="${{ secrets.lwt_texts_gcp_project_credentials }}"
+            env_vars: LWT_TEXTS_GCP_PROJECT_CREDENTIALS=${{ secrets.lwt_texts_gcp_project_credentials }}
